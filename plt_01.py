@@ -1,6 +1,7 @@
 import logging
 import sys
 import time
+import datetime
 
 import matplotlib.pyplot as plt
 import tkinter as tk
@@ -35,6 +36,7 @@ class TunerGUI:
 
         self.figplot = plt.Figure(figsize=(5, 4), dpi=100)
         self.ax2 = self.figplot.add_subplot(111)
+
         self.line2 = FigureCanvasTkAgg(self.figplot, self.master)
         self.line2.get_tk_widget().pack(side=tk.TOP, fill=  tk.BOTH, expand=1)
 
@@ -61,16 +63,7 @@ class TunerGUI:
         self.time_array_prev = []
 
 
-        
-        
-        #if TunerControlCF.cf.request_param_update == 1:
-        #    plt.title(time.clock_gettime)
-
-    def draw_plot(self, time_array, pos_array, sp_array):
-        
-        #plt.xlabel('Time', loc='right')
-        #plt.ylabel('pos Z', loc='top')
-        #plt.title(time.clock_gettime(), loc='center', pad=20)
+    def draw_plot(self, time_array, pos_array, sp_array):    
 
         self.ax2.clear()
         self.ax2.plot(self.time_array_prev, self.pos_array_prev,
@@ -83,11 +76,15 @@ class TunerGUI:
         self.sp_array_prev = sp_array
         self.time_array_prev = time_array
         
-        self.ax2.xlabel('Time', loc='right')
-        self.ax2.ylabel('pos Z', loc='top')
-        self.ax2.title(time.clock_gettime(), loc='center', pad=20)
+        self.ax2.set_title(time.ctime(), loc='right')
+        self.ax2.set_xlabel('time', loc='right')
+        self.ax2.set_ylabel('Z axis pos', loc='top')        
+
+        # % for segfault remains. 
+        #self.ax2.text(2.80,0.80, 'Kp='+ TunerControlCF.param_updated_callback_Kp)
+        #self.ax2.text(2.80,0.70, 'Ki='+ TunerControlCF.param_updated_callback_Ki)
+        #self.ax2.text(2.80,0.65, 'Kd='+ TunerControlCF.param_updated_callback_Kd) 
         
-        plt.savefig('default.png')
         
 
     def clear_plot(self):
@@ -149,6 +146,7 @@ class TunerControlCF:
         self.current_value_ki = 0
         self.current_value_vmax = 0
 
+
         self.cf.param.request_param_update('posCtlPid.zKp')
         self.cf.param.request_param_update('posCtlPid.zKi')
         self.cf.param.request_param_update('posCtlPid.zKd')
@@ -157,6 +155,11 @@ class TunerControlCF:
         time.sleep(0.1)
 
         self.update_scale_info()
+
+        self.v_kp = self.current_value_kp
+        self.v_ki = self.current_value_ki
+        self.v_kd = self.current_value_kd
+
 
         self.commander = cf.high_level_commander
         self.cf.param.set_value('commander.enHighLevel', '1')
@@ -169,6 +172,8 @@ class TunerControlCF:
         self.pid_gui.scale_Ki.set(self.current_value_ki)
         self.pid_gui.scale_vMax.set(self.current_value_vmax)
 
+
+        
     # Buttons
 
     def send_pid_gains(self):
@@ -223,7 +228,18 @@ class TunerControlCF:
         print(pos_history)
         print(sp_history)
 
+
         self.pid_gui.draw_plot(time_history, pos_history, sp_history)
+        
+        pid_gui.ax2.text(2.80,0.80, 'Kp='+ str(self.v_kp))
+        pid_gui.ax2.text(2.80,0.70, 'Ki='+ str(self.v_ki))
+        pid_gui.ax2.text(2.80,0.65, 'Kd='+ str(self.v_kd))
+
+        self.now = datetime.datetime.now()
+        
+        pid_gui.figplot.savefig('pid_graph_'+ self.now.strftime("%Y-%m-%d_%H:%M:%S")+'.png') # !!!!!
+
+
         if self.axis_choice == 'z':
             self.commander.go_to(0, 0, -1*STEP_SIZE, 0, 1.0, relative=True)
         elif self.axis_choice == 'x':
