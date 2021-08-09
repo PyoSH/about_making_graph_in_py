@@ -153,12 +153,13 @@ class TunerControlCF:
         self.cf.param.request_param_update('posCtlPid.xyVelMax')
 
         time.sleep(0.1)
-
+        
+        self.v_kp = 0
+        self.v_ki = 0
+        self.v_kd = 0
         self.update_scale_info()
 
-        self.v_kp = self.current_value_kp
-        self.v_ki = self.current_value_ki
-        self.v_kd = self.current_value_kd
+        
 
 
         self.commander = cf.high_level_commander
@@ -171,6 +172,8 @@ class TunerControlCF:
         self.pid_gui.scale_Kd.set(self.current_value_kd)
         self.pid_gui.scale_Ki.set(self.current_value_ki)
         self.pid_gui.scale_vMax.set(self.current_value_vmax)
+
+        self.v_kd
 
 
         
@@ -231,9 +234,12 @@ class TunerControlCF:
 
         self.pid_gui.draw_plot(time_history, pos_history, sp_history)
         
+        self.v_kp = self.current_value_kp
+        self.v_ki = self.current_value_ki
+        self.v_kd = self.current_value_kd
         pid_gui.ax2.text(2.80,0.80, 'Kp='+ str(self.v_kp))
-        pid_gui.ax2.text(2.80,0.70, 'Ki='+ str(self.v_ki))
-        pid_gui.ax2.text(2.80,0.65, 'Kd='+ str(self.v_kd))
+        pid_gui.ax2.text(2.80,0.75, 'Ki='+ str(self.v_ki))
+        pid_gui.ax2.text(2.80,0.70, 'Kd='+ str(self.v_kd))
 
         self.now = datetime.datetime.now()
         
