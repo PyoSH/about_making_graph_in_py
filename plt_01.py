@@ -154,9 +154,6 @@ class TunerControlCF:
 
         time.sleep(0.1)
         
-        self.v_kp = 0
-        self.v_ki = 0
-        self.v_kd = 0
         self.update_scale_info()
 
         
@@ -173,7 +170,6 @@ class TunerControlCF:
         self.pid_gui.scale_Ki.set(self.current_value_ki)
         self.pid_gui.scale_vMax.set(self.current_value_vmax)
 
-        self.v_kd
 
 
         
@@ -199,6 +195,10 @@ class TunerControlCF:
 
     def do_step(self):
         print('do step')
+
+        self.v_kp = 0
+        self.v_ki = 0
+        self.v_kd = 0
         log_config = LogConfig(name='Position setpoint', period_in_ms=10)
         log_config.add_variable('stateEstimate.' + self.axis_choice, 'float')
         log_config.add_variable('ctrltarget.' + self.axis_choice, 'float')
@@ -237,6 +237,7 @@ class TunerControlCF:
         self.v_kp = self.current_value_kp
         self.v_ki = self.current_value_ki
         self.v_kd = self.current_value_kd
+
         pid_gui.ax2.text(2.80,0.80, 'Kp='+ str(self.v_kp))
         pid_gui.ax2.text(2.80,0.75, 'Ki='+ str(self.v_ki))
         pid_gui.ax2.text(2.80,0.70, 'Kd='+ str(self.v_kd))
@@ -343,6 +344,13 @@ class TunerControlCF:
     def param_updated_callback_vMax(self, name, value):
         self.current_value_vmax = float(value)
 
+    #def param_updated_callback_v_kp(self, name, value):
+    #    self.v_kp = str(value)
+    #def param_updated_callback_v_ki(self, name, value):
+    #    self.v_ki = str(value)
+    #def param_updated_callback_v_kd(self, name, value):
+    #    self.v_kd = str(value)
+    
     def take_off(self, height):
         self.commander.takeoff(height, 2.0)
 
