@@ -79,11 +79,7 @@ class TunerGUI:
         self.ax2.set_title(time.ctime(), loc='right')
         self.ax2.set_xlabel('time', loc='right')
         self.ax2.set_ylabel('Z axis pos', loc='top')        
-
-        # % for segfault remains. 
-        #self.ax2.text(2.80,0.80, 'Kp='+ TunerControlCF.param_updated_callback_Kp)
-        #self.ax2.text(2.80,0.70, 'Ki='+ TunerControlCF.param_updated_callback_Ki)
-        #self.ax2.text(2.80,0.65, 'Kd='+ TunerControlCF.param_updated_callback_Kd) 
+ 
         
         
 
@@ -156,9 +152,6 @@ class TunerControlCF:
         
         self.update_scale_info()
 
-        
-
-
         self.commander = cf.high_level_commander
         self.cf.param.set_value('commander.enHighLevel', '1')
         self.take_off(STANDARD_HEIGHT)
@@ -180,7 +173,7 @@ class TunerControlCF:
               'position PID controller: Kp: ' +
               str(self.pid_gui.scale_Kp.get()) +
               ', Ki: ' + str(self.pid_gui.scale_Ki.get()) +
-              ', Kd: '+str(self.pid_gui.scale_Ki.get()))
+              ', Kd: '+str(self.pid_gui.scale_Kd.get()))
         cf.param.set_value(self.unit_choice+'CtlPid.'+self.axis_choice +
                            'Kp', self.pid_gui.scale_Kp.get())
         cf.param.set_value(self.unit_choice+'CtlPid.'+self.axis_choice +
@@ -203,6 +196,7 @@ class TunerControlCF:
         log_config.add_variable('stateEstimate.' + self.axis_choice, 'float')
         log_config.add_variable('ctrltarget.' + self.axis_choice, 'float')
 
+        
         if self.axis_choice == 'z':
             self.commander.go_to(0, 0, STEP_SIZE, 0, 0.6, relative=True)
         elif self.axis_choice == 'x':
@@ -228,8 +222,8 @@ class TunerControlCF:
 
                 if ((time.time() - current_time) > STEP_RESPONSE_TIME):
                     break
-        print(pos_history)
-        print(sp_history)
+        #print(pos_history)
+        #print(sp_history)
 
 
         self.pid_gui.draw_plot(time_history, pos_history, sp_history)
