@@ -7,3 +7,5 @@ Exercise; making graph by using matplotlib &amp; tkinter; code based on Bitcraze
 make_index.py -> if there are no index about Data List, use this.
 
 making_graph.py -> hardcoding... not yet. will be updated in this winter semester. 
+
+Make_graph.py -> tool for exps
