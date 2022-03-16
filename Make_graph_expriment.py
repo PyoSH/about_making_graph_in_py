@@ -1,7 +1,6 @@
-# Make a DataList from array file(by hand)
-# Handmade tool for Basic mechanical experimentals(MEB400)
+# Personal tool for MEB400 in KOREATECH
 
-from tkinter import N
+# from tkinter import N
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,22 +10,15 @@ import numpy as np
 ## 2021/11/22 update : Adding time value; Reaing, Making graph
 ## 2021/11/23 update : Adding count(time, data) for stop reading null data
 ##                     graph: 'vel', 'dt' text included
-
-# class DATA_ary:
-#     def __init__(x,n):
-#         X = x
-#         N_ =np.array(range(0,n-1))
-
-#     # def DataArry(x,n):
-#     #     self.X= x
-#     #     self.N_= np.array(range(0,n-1))
-
+## 2022/03/16 update : More Array-using
+##                     Variables arranged
+##                     Function(literally): txt read eliminated
 
 class MakeDataList:
-    def __init__(self,P_i,P_d,n__):
+    def __init__(self,Data_0,Data_1,n__):
         
-        self.Increase_P = P_i
-        self.Decrease_P = np.flip(P_d, axis=0)
+        self.Data_1st = Data_0
+        self.Data_2nd = np.flip(Data_1, axis=0) # flipped
         self.N__ = n__
 
         self.figplot = plt.Figure(figsize=(5, 4), dpi=1000)
@@ -34,48 +26,43 @@ class MakeDataList:
 
     
     def MakeGraph(self):
-        # Graph initalize
+        ## Graph initalize
         self.ax2.clear()
-
-        self.ax2.clear()
-        y_Inc = []
-        y_Dec = []
+        y_0 = []
+        y_1 = []
         x_ =[]
 
-        
-        y_Inc = self.Increase_P
-        y_Dec = self.Decrease_P
-        
+        ## Data input
+        y_0 = self.Data_1st
+        y_1 = self.Data_2nd
+
         x_ =np.array(range(1,self.N__+1))
         
-
-        # x_tgt=range(1,n-1)
-        
-        # when you use pybrick, use the code below...
+        ## When you use pybrick, use the code below...
         #y_tgt = maincode.target
-        
-        self.ax2.plot(x_, y_Inc[:,0], '-' , label='Inc_origin', color='red', alpha=0.5)
-        self.ax2.plot(x_, y_Inc[:,1], ':o' , label='Inc_digital', color='red', alpha=0.5)
-        self.ax2.plot(x_, y_Inc[:,2], ':^' , label='Inc_Bourdon', color='red', alpha=0.5)
 
-        self.ax2.plot(x_, y_Dec[:,0], '-' , label='Decrease', color='blue',alpha=0.5)
-        self.ax2.plot(x_, y_Dec[:,1], ':o' , label='Decrease', color='blue',alpha=0.5)
-        self.ax2.plot(x_, y_Dec[:,2], ':^' , label='Decrease', color='blue',alpha=0.5)
+        ## Drawing lines
+        self.ax2.plot(x_, y_0[:,0], '-' , label='Inc_origin', color='red', alpha=0.5)
+        self.ax2.plot(x_, y_0[:,1], ':o' , label='Inc_digital', color='red', alpha=1.0)
+        self.ax2.plot(x_, y_0[:,2], ':^' , label='Inc_Bourdon', color='red', alpha=1.0)
+        self.ax2.plot(x_, y_1[:,0], '-' , label='Decrease', color='blue',alpha=0.5)
+        self.ax2.plot(x_, y_1[:,1], ':o' , label='Decrease', color='blue',alpha=1.0)
+        self.ax2.plot(x_, y_1[:,2], ':^' , label='Decrease', color='blue',alpha=1.0)
         # self.ax2.plot(x_,2*x_, color = 'black', linestyle='--')
 
+        ## Titles
         self.ax2.set_title('Bourdon Pressure Experiment', loc='center')
         self.ax2.set_xlabel('Number of runs', loc='right')
         self.ax2.set_ylabel('Pressure(bar)', loc='top')
 
-        
+        ## Infos
         self.ax2.text(1,35.0, 'Blue = Decrease, 5times, 35 to 5',color='blue')
         self.ax2.text(1,33.0, 'Red = Increase, 4times, 4 to 28',color='red' )
         self.ax2.text(1,31.0, 'Solid line = Weight measured',color='black' )
         self.ax2.text(1,29.0, 'Circle = Digital measured',color='black' )
         self.ax2.text(1,27.0, 'Triangle = Bourdon measured',color='black' )
 
-        
-
+        ## File saving
         # self.now = datetime.datetime.now()
         self.figplot.savefig('Bourdon_graph_'+'.png') # !!!!!
 
