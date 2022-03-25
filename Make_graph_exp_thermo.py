@@ -1,5 +1,6 @@
-import matplotlib.pyplot as plt
-import numpy as np
+## Pyo Seung Hyun, koreatech, mechanical engineering, Junior at 2022. 
+## E-mail: jeongmok99@koreatech.ac.kr
+
 
 ## 2021/11/22 update : Adding time value; Reaing, Making graph
 ## 2021/11/23 update : Adding count(time, data) for stop reading null data
@@ -11,6 +12,9 @@ import numpy as np
 ##                     Ordinart Least Squre func included
 ##                     More easy to save plt as series file name
 ##                     
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 class MakeDataList:
     def __init__(self,Data_ori, Data_0,Data_1,Data_2, Data_3, n__):
@@ -121,7 +125,7 @@ class MakeDataList:
         ## Infos
         self.ax2.legend(fontsize=10)
 
-        dst='Temp_graph_specific'+str(num_) + '.png' #확장명 정해주기
+        dst='Temp_graph_specific'+str(num_) + '.png' 
         self.figplot.savefig(dst) # !!!!!
 
     def run(self):
