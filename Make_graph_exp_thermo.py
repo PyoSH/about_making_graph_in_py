@@ -1,7 +1,6 @@
 ## Pyo Seung Hyun, koreatech, mechanical engineering, Junior at 2022. 
 ## E-mail: jeongmok99@koreatech.ac.kr
-
-
+##
 ## 2021/11/22 update : Adding time value; Reaing, Making graph
 ## 2021/11/23 update : Adding count(time, data) for stop reading null data
 ##                     graph: 'vel', 'dt' text included
@@ -9,9 +8,9 @@
 ##                     Variables arranged
 ##                     Function(literally): txt read eliminated
 ## 2022/03/25 update : Input data array expansed (2 -> 4)
-##                     Ordinart Least Squre func included
-##                     More easy to save plt as series file name
-##                     
+##                     Ordinary Least Squre func included
+##                     prints each weight, bias 
+
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,20 +29,23 @@ class MakeDataList:
         self.figplot = plt.Figure(figsize=(5, 4), dpi=1000)
         self.ax2 = self.figplot.add_subplot(111)
 
-    def OLS(x, y):
+    def OLS(x, y,num__, type):
         import numpy as np
         x_bar = x.mean()
         y_bar = y.mean()
 
         calculated_weight = ((x - x_bar) * (y - y_bar)).sum() / ((x - x_bar)**2).sum() ; calculated_bias = y_bar - calculated_weight * x_bar 
-    
-        # print('w_thr: {:.4f}, b_thr: {:.4f}'.format(calculated_weight_theory,calculated_bias_theory))
-        # print('w_exp: {:.4f}, b_exp: {:.4f}'.format(calculated_weight_experi,calculated_bias_experi))
+
+        print(num__, type)
+        print('w: {:.4f}, b: {:.4f}'.format(calculated_weight,calculated_bias))
+
 
         return calculated_weight, calculated_bias
 
     
     def MakeGraph_only_data(self):
+        ## LAW DATAS!!!
+
         ## Graph initalize
         self.ax2.clear()
         y_0 = []; y_1 = [] ; y_2=[] ; y_3 =[]
@@ -74,6 +76,64 @@ class MakeDataList:
         ## File saving
         self.figplot.savefig('Temp_graph_'+'.png') # !!!!!
 
+    def MakeGraph_mixed_data(self):
+        ## MIXED-OLS DATAS!!!
+        ## Graph initalize
+        self.ax2.clear()
+        y_0 = []; y_1 = [] ; y_2=[] ; y_3 =[]
+        x_0 =[]
+
+        ## Data input
+        y_0 = self.Data_1st
+        y_1 = self.Data_2nd
+        y_2= self.Data_3rd
+        y_3= self.Data_4th
+        x_0 = self.Data_ori
+
+
+        ## OLS processing
+        theoredic_weight_0, theredic_bias_0 = MakeDataList.OLS(x_0,y_0[:,0],'R', 'ther') ; theoredic_weight_1, theredic_bias_1 = MakeDataList.OLS(x_0,y_1[:,0],'K','ther')  
+        theoredic_weight_2, theredic_bias_2 = MakeDataList.OLS(x_0,y_2[:,0],'T','ther') ; theoredic_weight_3, theredic_bias_3 = MakeDataList.OLS(x_0,y_3[:,0],'J','ther')  
+    
+        experi_weight_0, experi_bias_0 = MakeDataList.OLS(x_0, y_0[:,1],'R','exp') ; experi_weight_1, experi_bias_1 = MakeDataList.OLS(x_0, y_1[:,1],'K','exp') 
+        experi_weight_2, experi_bias_2 = MakeDataList.OLS(x_0, y_2[:,1],'T','exp') ; experi_weight_3, experi_bias_3 = MakeDataList.OLS(x_0, y_3[:,1],'J','exp') 
+
+        X_disp_ther = range(45, 500, 5)
+        Y_disp_ther_0 = X_disp_ther* theoredic_weight_0 + theredic_bias_0 ; Y_disp_ther_1 = X_disp_ther* theoredic_weight_1 + theredic_bias_1
+        Y_disp_ther_2 = X_disp_ther* theoredic_weight_2 + theredic_bias_2 ; Y_disp_ther_3 = X_disp_ther* theoredic_weight_3 + theredic_bias_3
+
+        X_disp_exp = range(45, 500, 5)
+        Y_disp_exp_0 = X_disp_exp* experi_weight_0 + experi_bias_0 ; Y_disp_exp_1 = X_disp_exp* experi_weight_1 + experi_bias_1
+        Y_disp_exp_2 = X_disp_exp* experi_weight_2 + experi_bias_2 ; Y_disp_exp_3 = X_disp_exp* experi_weight_3 + experi_bias_3
+
+        ## Drawing lines - OLS lines
+        # self.ax2.plot(X_disp_ther, Y_disp_ther_0, '-' , label='R-theoredical', color='black') # colors to be changed....
+        # self.ax2.plot(X_disp_ther, Y_disp_ther_1, '-' , label='K-theoredical', color='black')
+        # self.ax2.plot(X_disp_ther, Y_disp_ther_2, '-' , label='T-theoredical', color='black')
+        # self.ax2.plot(X_disp_ther, Y_disp_ther_3, '-' , label='J-theoredical', color='black')
+
+        self.ax2.plot(X_disp_ther, Y_disp_ther_0, '-' , label='R-theoredical', color='yellow',alpha=0.5)
+        self.ax2.plot(X_disp_ther, Y_disp_ther_1, '-' , label='K-theoredical', color='purple',alpha=0.5)
+        self.ax2.plot(X_disp_ther, Y_disp_ther_2, '-' , label='T-theoredical', color='blue',alpha=0.5)
+        self.ax2.plot(X_disp_ther, Y_disp_ther_3, '-' , label='J-theoredical', color='red',alpha=0.5)
+
+        self.ax2.plot(X_disp_exp, Y_disp_exp_0, '-' , label='R-experimental', color='yellow',alpha=1.0)
+        self.ax2.plot(X_disp_exp, Y_disp_exp_1, '-' , label='K-experimental', color='purple',alpha=1.0)
+        self.ax2.plot(X_disp_exp, Y_disp_exp_2, '-' , label='T-experimental', color='blue',alpha=1.0)
+        self.ax2.plot(X_disp_exp, Y_disp_exp_3, '-' , label='J-experimental', color='red',alpha=1.0)
+        
+
+        ## Titles
+        self.ax2.set_title('R, K, T, J Experimental Figure', loc='center')
+        self.ax2.set_xlabel('Temperature T(deg C)', loc='right')
+        self.ax2.set_ylabel('E(T) (mV)', loc='top')
+
+        ## Infos
+        self.ax2.legend(fontsize=10)
+
+        ## File saving
+        self.figplot.savefig('Temp_mixed_graph_'+'.png') # !!!!!
+
     def MakeGraph_specific(self, num_):
         self.ax2.clear()
         y_0 = []
@@ -103,8 +163,8 @@ class MakeDataList:
         x_0 = self.Data_ori
 
         ## OLS processing
-        theoredic_weight, theredic_bias = MakeDataList.OLS(x_0,y_0)
-        experi_weight, experi_bias = MakeDataList.OLS(x_0, y_1)
+        theoredic_weight, theredic_bias = MakeDataList.OLS(x_0,y_0,Title_,'ther')
+        experi_weight, experi_bias = MakeDataList.OLS(x_0, y_1,Title_,'exp')
 
         X_disp_ther = range(45, 100, 5)
         Y_disp_ther = X_disp_ther* theoredic_weight + theredic_bias
@@ -125,11 +185,12 @@ class MakeDataList:
         ## Infos
         self.ax2.legend(fontsize=10)
 
-        dst='Temp_graph_specific'+str(num_) + '.png' 
+        dst='Temp_graph_specific'+str(num_) + '.png' #확장명 정해주기
         self.figplot.savefig(dst) # !!!!!
 
     def run(self):
         MakeDataList.MakeGraph_only_data(self)
+        MakeDataList.MakeGraph_mixed_data(self)
         MakeDataList.MakeGraph_specific(self, 1)
         MakeDataList.MakeGraph_specific(self, 2)
         MakeDataList.MakeGraph_specific(self, 3)
