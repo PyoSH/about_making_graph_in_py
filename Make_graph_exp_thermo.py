@@ -9,6 +9,7 @@ import numpy as np
 ##                     Function(literally): txt read eliminated
 ## 2022/03/25 update : Input data array expansed (2 -> 4)
 ##                     Ordinart Least Squre func included
+##                     More easy to save plt as series file name
 ##                     
 
 class MakeDataList:
@@ -78,16 +79,20 @@ class MakeDataList:
         ## Data input
         if num_ ==1:
             y_0 = self.Data_1st[:,0] # Theoredical figure
-            y_1 = self.Data_1st[:,1] # experimental figure    
+            y_1 = self.Data_1st[:,1] # experimental figure
+            Title_ = 'R type'
         elif num_ ==2:
             y_0 = self.Data_2nd[:,0] # Theoredical figure
-            y_1 = self.Data_2nd[:,1] # experimental figure    
+            y_1 = self.Data_2nd[:,1] # experimental figure
+            Title_ = 'K type'
         elif num_ ==3:
             y_0 = self.Data_3rd[:,0] # Theoredical figure
             y_1 = self.Data_3rd[:,1] # experimental figure
+            Title_ = 'T type'
         elif num_ ==4:
             y_0 = self.Data_4th[:,0] # Theoredical figure
             y_1 = self.Data_4th[:,1] # experimental figure
+            Title_ = 'J type'
         else:
             print("INPUT ERROR!!!")
 
@@ -108,9 +113,10 @@ class MakeDataList:
         self.ax2.plot(X_disp_exp, Y_disp_exp, '-' , label='Experimental Figure', color='red', alpha=1.0)
 
         ## Titles
-        self.ax2.set_title('R, K, T, J Experimental Figure', loc='center')
-        self.ax2.set_xlabel('Temperature(℃)', loc='right')
-        self.ax2.set_ylabel('mv', loc='top')
+        
+        self.ax2.set_title( Title_+' Figure', loc='center')
+        self.ax2.set_xlabel('Temperature(deg C)', loc='right')
+        self.ax2.set_ylabel('E(T) (mV)', loc='top')
 
         ## Infos
         self.ax2.legend(fontsize=10)
